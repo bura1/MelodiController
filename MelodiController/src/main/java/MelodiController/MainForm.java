@@ -18,8 +18,9 @@ public class MainForm extends javax.swing.JFrame {
     MidiDevice device = null;
     MidiDevice.Info[] midiPorts = MidiSystem.getMidiDeviceInfo();
     
-    private Thread thread = null;
-    private MidiSender runnable = null;
+    //private Thread thread = null;
+    //private MidiSender runnable = null;
+    MidiSender thread = new MidiSender();
     
     //Thread t1 = new Thread(new MidiSender());
 
@@ -46,7 +47,6 @@ public class MainForm extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -80,22 +80,15 @@ public class MainForm extends javax.swing.JFrame {
             }
         });
 
-        jButton1.setText("Start");
+        jButton1.setText("Set");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
             }
         });
 
-        jButton2.setText("Stop");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
-            }
-        });
-
-        jLabel5.setForeground(new java.awt.Color(102, 102, 102));
-        jLabel5.setText("Status: Stopped");
+        jLabel5.setForeground(new java.awt.Color(0, 255, 51));
+        jLabel5.setText("Status: Running");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -119,10 +112,8 @@ public class MainForm extends javax.swing.JFrame {
                         .addComponent(jLabel5))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(6, 6, 6)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(234, Short.MAX_VALUE))
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(279, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -150,9 +141,7 @@ public class MainForm extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(24, 24, 24)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2))
+                .addComponent(jButton1)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel5)
                 .addContainerGap(35, Short.MAX_VALUE))
@@ -162,27 +151,12 @@ public class MainForm extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        runnable = new MidiSender();
-        thread = new Thread(runnable);
-        thread.start();
-        //t1.start();
+        //thread.startRunning();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField1ActionPerformed
-
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        /*if (thread != null) {
-            runnable.stop();
-            try {
-                thread.join();
-            } catch (InterruptedException ex) {
-                Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }*/
-        thread.interrupt();
-    }//GEN-LAST:event_jButton2ActionPerformed
 
     
     public static void main(String args[]) {
@@ -197,7 +171,6 @@ public class MainForm extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -211,5 +184,6 @@ public class MainForm extends javax.swing.JFrame {
         for (int i = 0; i < midiPorts.length; i++) {
             jComboBox1.addItem(midiPorts[i].toString());
         }
+        thread.start();
     }
 }
