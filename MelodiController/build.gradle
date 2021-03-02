@@ -13,3 +13,9 @@ dependencies {
     testImplementation     'junit:junit:4.13'
     implementation 'com.formdev:flatlaf-swingx:1.0-rc2'
 }
+
+jar {
+    manifest {
+        attributes "Main-Class": "$mainClassName"
+    }
+}

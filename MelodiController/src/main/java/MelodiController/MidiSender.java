@@ -36,26 +36,12 @@ public class MidiSender extends Thread {
     MidiDevice device = null;
     MidiDevice.Info[] infos = MidiSystem.getMidiDeviceInfo();
     
-    public void zaustavi() {
-        running = false;
-    }
+    volatile int deviceId = 0;
 
     @Override
-    public void run() {
+    public void start() {
         
-        try {
-            device = MidiSystem.getMidiDevice(infos[5]);
-        } catch (MidiUnavailableException e) {}
-
-        try {
-            device.open();
-        } catch (MidiUnavailableException e) {}
-
-        try {
-            serverSocket = new ServerSocket(6000);
-        } catch (IOException ex) {
-            Logger.getLogger(MidiSender.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        socketStuff();
         
         while (running) {
             try {
@@ -101,12 +87,31 @@ public class MidiSender extends Thread {
         
     }
     
-    public void stopRunning() {
-       running = false;
-    }
-    
-    public void startRunning() {
-       running = true;
+    public void socketStuff() {
+        // pokusaj ugasit serversocket
+        /*if (serverSocket != null && !serverSocket.isClosed()) {
+            try {
+                serverSocket.close();
+            } catch (IOException e)
+            {
+                e.printStackTrace(System.err);
+            }
+        }*/
+        
+        // upali serversocket
+        try {
+            device = MidiSystem.getMidiDevice(infos[deviceId]);
+        } catch (MidiUnavailableException e) {}
+
+        try {
+            device.open();
+        } catch (MidiUnavailableException e) {}
+
+        try {
+            serverSocket = new ServerSocket(6000);
+        } catch (IOException ex) {
+            Logger.getLogger(MidiSender.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
 }
