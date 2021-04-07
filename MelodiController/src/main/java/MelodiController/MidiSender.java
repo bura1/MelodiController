@@ -8,8 +8,11 @@ package MelodiController;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.sound.midi.InvalidMidiDataException;
@@ -41,14 +44,27 @@ public class MidiSender extends Thread {
     @Override
     public void start() {
         
-        socketStuff();
+        //socketStuff();
+        
+        DatagramPacket dpac;
+        DatagramSocket dsoc = null;
+        try {
+            dsoc = new DatagramSocket(1314);
+        } catch (SocketException ex) {
+            Logger.getLogger(MidiSender.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        byte [] b = new byte[1000];
         
         while (running) {
             try {
-                socket = serverSocket.accept();
+                /*socket = serverSocket.accept();
                 inputStreamReader = new InputStreamReader(socket.getInputStream());
                 bufferedReader = new BufferedReader(inputStreamReader);
-                message = bufferedReader.readLine();
+                message = bufferedReader.readLine();*/
+                
+                dpac = new DatagramPacket(b, b.length);
+                dsoc.receive(dpac);
+                message = new String(dpac.getData());
             } catch(IOException e) {
                 e.printStackTrace();
             }
