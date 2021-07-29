@@ -68,6 +68,7 @@ public class MidiSender extends Thread {
             ShortMessage midiMsg = new ShortMessage();
             
             try {
+                System.out.println(message);
                 int noteNum = Integer.parseInt(message.substring(1,4));
                 int note;
                 if (noteNum == 100 || noteNum == 101 || noteNum == 102 || 
@@ -86,11 +87,13 @@ public class MidiSender extends Thread {
                     note = Integer.parseInt(message.substring(1,3));
                 }
                 
+                int velocity = Integer.parseInt(message.substring(4,7));
+                
                 if (message.substring(0,1).equals("0")) {
-                    midiMsg.setMessage(ShortMessage.NOTE_ON, 0, note, 127);
+                    midiMsg.setMessage(ShortMessage.NOTE_ON, 0, note, velocity);
                 }
                 if (message.substring(0,1).equals("1")) {
-                    midiMsg.setMessage(ShortMessage.NOTE_OFF, 0, note, 127);
+                    midiMsg.setMessage(ShortMessage.NOTE_OFF, 0, note, velocity);
                 }
             } catch (InvalidMidiDataException ex) {
                 Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
