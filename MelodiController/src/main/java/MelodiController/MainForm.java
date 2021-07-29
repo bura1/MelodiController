@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package MelodiController;
+import static java.lang.Integer.parseInt;
 import javax.sound.midi.*;
 
 /**
@@ -61,8 +62,9 @@ public class MainForm extends javax.swing.JFrame {
 
         jLabel4.setText("Enter Host");
 
+        jTextField1.setEditable(false);
         jTextField1.setHorizontalAlignment(javax.swing.JTextField.LEFT);
-        jTextField1.setText("6000");
+        jTextField1.setText("1314");
         jTextField1.setAlignmentX(0.0F);
         jTextField1.setAlignmentY(0.0F);
         jTextField1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(102, 102, 102)));
@@ -139,8 +141,8 @@ public class MainForm extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         thread.deviceId = jComboBox1.getSelectedIndex();
+        thread.portNum = parseInt(jTextField1.getText());
         thread.socketStuff();
-        //jLabel5.setText("Running port: " + jComboBox1.getSelectedItem());
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
@@ -172,6 +174,7 @@ public class MainForm extends javax.swing.JFrame {
         for (int i = 0; i < midiPorts.length; i++) {
             jComboBox1.addItem(midiPorts[i].toString());
         }
+        thread.socketStuff();
         thread.start();
     }
 }

@@ -40,28 +40,24 @@ public class MidiSender extends Thread {
     MidiDevice.Info[] infos = MidiSystem.getMidiDeviceInfo();
     
     volatile int deviceId = 0;
+    volatile int portNum = 1314;
 
     @Override
     public void start() {
         
-        //socketStuff();
-        
         DatagramPacket dpac;
         DatagramSocket dsoc = null;
+        
         try {
-            dsoc = new DatagramSocket(1314);
+            dsoc = new DatagramSocket(portNum);
         } catch (SocketException ex) {
             Logger.getLogger(MidiSender.class.getName()).log(Level.SEVERE, null, ex);
         }
         byte [] b = new byte[1000];
         
         while (running) {
-            try {
-                /*socket = serverSocket.accept();
-                inputStreamReader = new InputStreamReader(socket.getInputStream());
-                bufferedReader = new BufferedReader(inputStreamReader);
-                message = bufferedReader.readLine();*/
-                
+            
+            try {                
                 dpac = new DatagramPacket(b, b.length);
                 dsoc.receive(dpac);
                 message = new String(dpac.getData());
@@ -72,12 +68,29 @@ public class MidiSender extends Thread {
             ShortMessage midiMsg = new ShortMessage();
             
             try {
-                int note = Integer.parseInt(message.substring(1,3));
+                int noteNum = Integer.parseInt(message.substring(1,4));
+                int note;
+                if (noteNum == 100 || noteNum == 101 || noteNum == 102 || 
+                        noteNum == 103 || noteNum == 104 || noteNum == 105 || 
+                        noteNum == 106 || noteNum == 107 || noteNum == 108 || 
+                        noteNum == 109 || noteNum == 110 || noteNum == 111 || 
+                        noteNum == 112 || noteNum == 113 || noteNum == 114 || 
+                        noteNum == 115 || noteNum == 116 || noteNum == 117 || 
+                        noteNum == 118 || noteNum == 119 || noteNum == 120 ||
+                        noteNum == 121 || noteNum == 122 || noteNum == 123 ||
+                        noteNum == 124 || noteNum == 125 || noteNum == 126 ||
+                        noteNum == 127 || noteNum == 128 || noteNum == 129) {
+                    
+                    note = Integer.parseInt(message.substring(1,4));
+                } else {
+                    note = Integer.parseInt(message.substring(1,3));
+                }
+                
                 if (message.substring(0,1).equals("0")) {
-                    midiMsg.setMessage(ShortMessage.NOTE_ON, 0, note, 93);
+                    midiMsg.setMessage(ShortMessage.NOTE_ON, 0, note, 127);
                 }
                 if (message.substring(0,1).equals("1")) {
-                    midiMsg.setMessage(ShortMessage.NOTE_OFF, 1, note, 93);
+                    midiMsg.setMessage(ShortMessage.NOTE_OFF, 0, note, 127);
                 }
             } catch (InvalidMidiDataException ex) {
                 Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
@@ -90,6 +103,7 @@ public class MidiSender extends Thread {
             } catch (MidiUnavailableException ex) {
                 Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
             }
+                    
             rcvr.send(midiMsg, timeStamp);            
         }
         
@@ -104,17 +118,6 @@ public class MidiSender extends Thread {
     }
     
     public void socketStuff() {
-        // pokusaj ugasit serversocket
-        /*if (serverSocket != null && !serverSocket.isClosed()) {
-            try {
-                serverSocket.close();
-            } catch (IOException e)
-            {
-                e.printStackTrace(System.err);
-            }
-        }*/
-        
-        // upali serversocket
         try {
             device = MidiSystem.getMidiDevice(infos[deviceId]);
         } catch (MidiUnavailableException e) {}
@@ -122,12 +125,6 @@ public class MidiSender extends Thread {
         try {
             device.open();
         } catch (MidiUnavailableException e) {}
-
-        try {
-            serverSocket = new ServerSocket(6000);
-        } catch (IOException ex) {
-            Logger.getLogger(MidiSender.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
     
 }
